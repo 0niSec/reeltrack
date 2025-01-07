@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   # resource :session
-  resources :passwords 
+  resources :passwords
   # resources param: :token
 
   # Sessions
