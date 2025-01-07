@@ -1,6 +1,45 @@
 # Omakase Ruby styling for Rails
 inherit_gem: { rubocop-rails-omakase: rubocop.yml }
 
+# Use 4 spaces for indentation
+Layout/IndentationWidth:
+  Width: 4
+
+# Use spaces for indentation, not tabs
+Layout/IndentationStyle:
+  EnforcedStyle: spaces
+
+# Align parameters with first parameter
+Layout/ParameterAlignment:
+  EnforcedStyle: with_first_parameter
+
+# Align elements of array literals
+Layout/ArrayAlignment:
+  EnforcedStyle: with_first_element
+
+# Line length limit
+Layout/LineLength:
+  Max: 120
+
+# Leading comment space
+Layout/LeadingCommentSpace:
+  Enabled: true
+
+# Empty lines around class bodies
+Layout/EmptyLinesAroundClassBody:
+  EnforcedStyle: empty_lines
+
+# Empty lines around module bodies
+Layout/EmptyLinesAroundModuleBody:
+  EnforcedStyle: empty_lines
+
+# Empty lines around block bodies
+Layout/EmptyLinesAroundBlockBody:
+  EnforcedStyle: no_empty_lines
+
+# Trailing empty lines
+Layout/TrailingEmptyLines:
+  EnforcedStyle: final_newline
 # Overwrite or add rules to create your own house style
 #
 # # Use `[a, [b, c]]` not `[ a, [ b, c ] ]`
