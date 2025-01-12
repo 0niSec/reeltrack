@@ -1,6 +1,6 @@
 require "test_helper"
 
-class WatchlistItemTest < ActiveSupport::TestCase
+class WatchlistMovieTest < ActiveSupport::TestCase
     # test "the truth" do
     #   assert true
     # end

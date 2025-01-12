@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_12_020330) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_12_145036) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -39,6 +39,30 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_12_020330) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "genres", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "genres_movies", id: false, force: :cascade do |t|
+    t.integer "movie_id", null: false
+    t.integer "genre_id", null: false
+  end
+
+  create_table "movies", force: :cascade do |t|
+    t.string "title"
+    t.integer "release_year"
+    t.text "overview"
+    t.string "poster_url"
+    t.integer "runtime"
+    t.string "tmdb_id"
+    t.decimal "tmdb_rating"
+    t.integer "tmdb_votes_count"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "profiles", force: :cascade do |t|
     t.text "bio"
     t.integer "age"
@@ -48,6 +72,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_12_020330) do
     t.text "favorite_movies"
     t.text "favorite_shows"
     t.index ["user_id"], name: "index_profiles_on_user_id"
+  end
+
+  create_table "reviews", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "movie_id", null: false
+    t.integer "watched_movie_id", null: false
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["movie_id"], name: "index_reviews_on_movie_id"
+    t.index ["user_id"], name: "index_reviews_on_user_id"
+    t.index ["watched_movie_id"], name: "index_reviews_on_watched_movie_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -69,6 +105,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_12_020330) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  create_table "watched_movies", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "movie_id", null: false
+    t.decimal "rating", precision: 2, scale: 1
+    t.date "watched_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["movie_id"], name: "index_watched_movies_on_movie_id"
+    t.index ["user_id"], name: "index_watched_movies_on_user_id"
+  end
+
   create_table "watchlist_items", force: :cascade do |t|
     t.integer "user_id"
     t.string "watchable_type"
@@ -79,8 +126,24 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_12_020330) do
     t.index ["watchable_type", "watchable_id"], name: "index_watchlist_items_on_watchable"
   end
 
+  create_table "watchlist_movies", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "movie_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["movie_id"], name: "index_watchlist_movies_on_movie_id"
+    t.index ["user_id"], name: "index_watchlist_movies_on_user_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "profiles", "users"
+  add_foreign_key "reviews", "movies"
+  add_foreign_key "reviews", "users"
+  add_foreign_key "reviews", "watched_movies"
   add_foreign_key "sessions", "users"
+  add_foreign_key "watched_movies", "movies"
+  add_foreign_key "watched_movies", "users"
+  add_foreign_key "watchlist_movies", "movies"
+  add_foreign_key "watchlist_movies", "users"
 end

@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "movies/index"
+  get "movies/show"
   # resource :session
   # resources param: :token
 

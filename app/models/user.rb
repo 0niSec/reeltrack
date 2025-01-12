@@ -3,6 +3,8 @@ class User < ApplicationRecord
   has_secure_password
   has_many :sessions, dependent: :destroy
   has_many :watchlist_items
+  has_many :watched_movies
+  has_many :reviews
 
   has_one :profile, dependent: :destroy
   has_one_attached :avatar do |attachable|
