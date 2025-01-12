@@ -35,6 +35,7 @@ module Authentication
       redirect_to new_session_path
     end
 
+    # After authentication, redirect to the profile page
     def after_authentication_url
       session.delete(:return_to_after_authenticating) || root_url
     end

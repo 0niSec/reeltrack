@@ -4,23 +4,23 @@
     </div>
 
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-sm">
-        <%= form_with(url: sign_up_path, class: "space-y-6") do |f| %>
+        <%= form_with(model: @user, url: sign_up_path, class: "space-y-6") do |f| %>
             <div class="space-y-1">
-                <%= f.label :email, class: "block font-medium leading-6" %>
-                <%= f.email_field :email, class: "block w-full shadow rounded-md border border-gray-400  focus:outline-none focus:ring-1 focus:ring-primary-600 focus:border-primary-600 bg-primary-800/20 px-3 py-2 mt-2" %>
+                <%= f.label :username, class: "block font-medium leading-6" %>
+                <%= f.text_field :username, class: "block w-full shadow rounded-md border border-gray-400  focus:outline-none focus:ring-1 focus:ring-primary-600 focus:border-primary-600 bg-primary-800/20 px-3 py-2 mt-2", placeholder: "ILoveMovies" %>
             </div>
 
             <div class="space-y-1">
-                <%= f.label :password, class: "block font-medium leading-6" %>
-                <%= f.password_field :password, class: "block w-full shadow rounded-md border border-gray-400 focus:outline-none focus:ring-1 focus:ring-primary-600 focus:border-primary-600 bg-primary-800/20 px-3 py-2 mt-2" %>
+                <%= f.label :email_address, class: "block font-medium leading-6" %>
+                <%= f.email_field :email_address, class: "block w-full shadow rounded-md border border-gray-400 focus:outline-none focus:ring-1 focus:ring-primary-600 focus:border-primary-600 bg-primary-800/20 px-3 py-2 mt-2", placeholder: "ilovemovies@gmail.com" %>
             </div>
 
             <div class="space-y-1">
-                <%= f.label :password_confirmation, "Confirm password", class: "block font-medium leading-6" %>
-                <%= f.password_field :password_confirmation, class: "block w-full shadow rounded-md border border-gray-400 focus:outline-none focus:ring-1 focus:ring-primary-600 focus:border-primary-600 bg-primary-800/20 px-3 py-2 mt-2" %>
+                <%= f.label :password, "Password", class: "block font-medium leading-6" %>
+                <%= f.password_field :password, class: "block w-full shadow rounded-md border border-gray-400 focus:outline-none focus:ring-1 focus:ring-primary-600 focus:border-primary-600 bg-primary-800/20 px-3 py-2 mt-2", placeholder: "Reeltrackisthebest" %>
             </div>
 
-            <%= f.submit "Sign up", class: "flex w-full cursor-pointer justify-center rounded-md bg-primary-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-primary-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600" %>
+            <%= f.submit "Sign Up", class: "flex w-full cursor-pointer justify-center rounded-md bg-primary-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-primary-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600" %>
         <% end %>
 
         <p class="mt-8 text-center text-sm text-gray-500">

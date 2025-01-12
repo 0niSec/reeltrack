@@ -1,0 +1,104 @@
+<%= render "layouts/flash" %>
+
+<div class="container mx-auto mt-10 max-w-6xl">
+    <%# Profile Header %>
+    <div class="bg-primary-900/50 rounded-lg p-8 mb-8 backdrop-blur">
+        <div class="flex items-start gap-8">
+            <%# Avatar %>
+            <div class="flex-shrink-0">
+                <% if @profile.user.avatar.present? %>
+                    <%= image_tag @profile.user.avatar.variant(:medium), class: "w-32 h-32 rounded-full object-cover" %>
+                <% else %>
+                    <div class="w-32 h-32 rounded-full bg-primary-700 flex items-center justify-center">
+                        <span class="text-4xl font-bold"><%= @profile.user.username.first(2).upcase %></span>
+                    </div>
+                <% end %>
+            </div>
+
+            <%# User Info %>
+            <div class="flex-grow h-32">
+                <h1 class="text-3xl font-bold mb-2"><%= @profile.user.username %></h1>
+                <div class="text-neutral-400 mb-4">
+                    Member since <%= @profile.user.created_at.strftime("%B %Y") %>
+                </div>
+
+                <%# Stats %>
+                <div class="flex gap-6 text-sm">
+                    <div>
+                        <div class="font-semibold text-neutral-400">Movies</div>
+                        <div class="text-2xl font-bold">0</div>
+                    </div>
+                    <div>
+                        <div class="font-semibold text-neutral-400">Shows</div>
+                        <div class="text-2xl font-bold">0</div>
+                    </div>
+                    <div>
+                        <div class="font-semibold text-neutral-400">Lists</div>
+                        <div class="text-2xl font-bold">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <%# Edit Button %>
+            <% if @profile.user == Current.user %>
+                <%= link_to "Edit Profile", edit_profile_path, 
+                class: "px-4 py-2 font-medium bg-primary-700 hover:bg-primary-600 hover:text-primary-200 rounded-md transition-colors" %>
+            <% end %>
+        </div>
+    </div>
+
+    <%# Bio Section %>
+    <div class="bg-primary-800/50 rounded-lg p-8 mb-8 backdrop-blur">
+        <h2 class="text-xl font-bold mb-4">About Me</h2>
+        <div class="  max-w-none">
+            <%= @profile.bio.presence || "There's nothing here yet..." %>
+        </div>
+    </div>
+
+    <%# Favorite Movies & Shows %>
+    <div class="grid md:grid-cols-2 gap-x-8 mb-10">
+        <div class="bg-primary-800/50 rounded-lg p-8 backdrop-blur">
+            <h3 class="font-bold mb-4">Favorite Movies</h3>
+            <div class="max-w-none">
+                <%= @profile.favorite_movies.presence || "Empty! Like the deserts of Arrakis..." %>
+            </div>
+        </div>
+
+        <div class="bg-primary-800/50 rounded-lg p-8 backdrop-blur">
+            <h3 class="font-bold mb-4">Favorite Shows</h3>
+            <div class="max-w-none">
+                <%= @profile.favorite_shows.presence || "" %>
+            </div>
+        </div>
+    </div>
+
+    <%# Watchlist Section %>
+    <div class="bg-primary-800/50 rounded-lg p-8 mb-8 backdrop-blur">
+        <h3 class="text-xl font-bold mb-4">Watchlist</h3>
+
+        <% if @profile.user.watchlist_items.any? %>
+            <div class="grid gap-4">
+                <% @profile.user.watchlist_items.recent.limit(5).each do |item| %>
+                    <div class="flex items-center gap-4">
+                        <%= image_tag item.watchable.poster_url, class: "w-12 h-16 object-cover rounded" %>
+                        <div>
+                            <div class="font-bold"><%= item.watchable.title %></div>
+                            <div class="text-sm text-neutral-400">
+                                Added <%= time_ago_in_words(item.created_at) %> ago
+                            </div>
+                        </div>
+                    </div>
+                <% end %>
+            </div>
+
+            <% if @profile.user.watchlist_items.count > 5 %>
+                <%= link_to "View Full Watchlist", watchlist_path(@profile.user), 
+                class: "mt-4 inline-block text-sm text-primary-400 hover:text-primary-300" %>
+            <% end %>
+        <% else %>
+            <div>
+                No items in the watchlist.
+            </div>
+        <% end %>
+    </div>
+</div>

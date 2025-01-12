@@ -5,6 +5,9 @@ inherit_gem: { rubocop-rails-omakase: rubocop.yml }
 Layout/IndentationWidth:
   Width: 4
 
+Layout/IndentationConsistency:
+  EnforcedStyle: normal
+
 # Use spaces for indentation, not tabs
 Layout/IndentationStyle:
   EnforcedStyle: spaces

@@ -7,16 +7,29 @@
             </div>
 
             <%# Navigation %>
-            <nav class="flex space-x-4">
-                <% if authenticated? %>
+            <nav class="flex items-center space-x-4">
+                <%= link_to "Movies", "#", class: "font-bold hover:text-primary-500 transition-colors" %>
+                <%= link_to "Shows", "#", class: "font-bold hover:text-primary-500 transition-colors" %>
+                <%= link_to "Lists", "#", class: "font-bold hover:text-primary-500 transition-colors" %>
+
+                <% if authenticated? && Current.user %>
                     <%= link_to "Sign Out", logout_path, data: { turbo_method: :delete }, class: "font-bold hover:text-primary-500 transition-colors" %>
+
+                    <%# Profile with Avatar %>
+                    <%= link_to profile_path(user_id: Current.user.id), class: "flex items-center space-x-2 hover:text-primary-500 transition-colors" do %>
+                        <% if Current.user.avatar.present? %>
+                            <%= image_tag Current.user.avatar, class: "w-8 h-8 rounded-full" %>
+                        <% else %>
+                            <div class="w-8 h-8 rounded-full bg-primary-700 flex items-center justify-center">
+                                <span class="text-sm font-bold"><%= Current.user.username&.first(2)&.upcase || "RT" %></span>
+                            </div>
+                        <% end %>
+                        <span class="font-bold"><%= Current.user.username %></span>
+                    <% end %>
                 <% else %>
                     <%= link_to "Sign In", login_path, class: "font-bold hover:text-primary-500 transition-colors" %>
                     <%= link_to "Create Account", sign_up_path, class: "font-bold hover:text-primary-500 transition-colors" %>
                 <% end %>
-                <%= link_to "Movies", "#", class: "font-bold hover:text-primary-500 transition-colors" %>
-                <%= link_to "Shows", "#", class: "font-bold hover:text-primary-500 transition-colors" %>
-                <%= link_to "Lists", "#", class: "font-bold hover:text-primary-500 transition-colors" %>
             </nav>
         </div>
     </div>

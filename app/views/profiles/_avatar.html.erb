@@ -1,0 +1,22 @@
+<div class="flex-shrink-0 relative" id="avatar-container" data-controller="avatar">
+    <% if user.avatar.attached? %>
+        <%= image_tag user.avatar.variant(:medium), class: "w-32 h-32 rounded-full object-cover" %>
+    <% else %>
+        <div class="w-32 h-32 rounded-full bg-primary-700 flex items-center justify-center">
+            <span class="text-4xl font-bold"><%= user.username.first(2).upcase %></span>
+        </div>
+    <% end %>
+
+    <%= form.fields_for :user do |user_form| %>
+        <%= user_form.hidden_field :id %>
+        <label class="absolute inset-0 flex items-center justify-center rounded-full 
+                bg-black/50 opacity-0 hover:opacity-100 transition-opacity cursor-pointer">
+            <span class="text-sm text-white">Change Avatar</span>
+            <%= user_form.file_field :avatar, 
+                class: "hidden", 
+                accept: "image/jpg, image/jpeg, image/png",
+                direct_upload: true,
+                data: { action: "avatar#preview" } %>
+        </label>
+    <% end %>
+</div>

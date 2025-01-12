@@ -1,0 +1,57 @@
+<%= render "layouts/flash" %>
+
+<div class="container mx-auto mt-10 max-w-6xl">
+    <%= form_with(model: @profile, url: profile_path(user_id: Current.user.id), method: "patch", multipart: true) do |form| %>
+        <%# Profile Header %>
+        <div class="bg-primary-900/50 rounded-lg p-8 mb-8 backdrop-blur">
+            <div class="flex items-start gap-8">
+                <%# Avatar - replaced with partial %>
+                <%= render "profiles/avatar", user: @user, form: form %>
+
+                <%# User Info %>
+                <div class="flex-grow">
+                    <h1 class="text-3xl font-bold mb-2"><%= @profile.user.username %></h1>
+                    <div class="text-neutral-400 mb-4">
+                        Member since <%= @profile.user.created_at.strftime("%B %Y") %>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%# Bio Section %>
+        <div class="bg-primary-800/50 rounded-lg p-8 mb-8 backdrop-blur">
+            <h2 class="text-xl font-bold mb-4">About Me</h2>
+            <%= form.text_area :bio, 
+                rows: 4,
+                placeholder: "Tell us about yourself...",
+                class: "w-full p-2 shadow rounded-md border border-primary-600 focus:outline-none focus:ring-1 focus:ring-primary-600 focus:border-primary-600 placeholder:text-primary-100 bg-primary-600/20" %>
+        </div>
+
+        <%# Favorite Movies & Shows %>
+        <div class="grid md:grid-cols-2 gap-8 mb-8">
+            <div class="bg-primary-800/50 rounded-lg p-8 backdrop-blur">
+                <h3 class="font-bold mb-4">Favorite Movies</h3>
+                <%= form.text_area :favorite_movies,
+                    rows: 3,
+                    placeholder: "List some of your favorite movies...",
+                    class: "w-full p-2 shadow rounded-md border border-primary-600 focus:outline-none focus:ring-1 focus:ring-primary-600 focus:border-primary-600 placeholder:text-primary-100 bg-primary-600/20" %>
+            </div>
+
+            <div class="bg-primary-800/50 rounded-lg p-8 backdrop-blur">
+                <h3 class="font-bold mb-4">Favorite Shows</h3>
+                <%= form.text_area :favorite_shows,
+                    rows: 3,
+                    placeholder: "List some of your favorite shows...",
+                    class: "w-full p-2 shadow rounded-md border border-primary-600 focus:outline-none focus:ring-1 focus:ring-primary-600 focus:border-primary-600 placeholder:text-primary-100 bg-primary-600/20" %>
+            </div>
+        </div>
+
+        <%# Save Button %>
+        <div class="flex justify-end gap-4">
+            <%= link_to "Cancel", profile_path(user_id: Current.user.id), 
+                class: "px-4 py-2 rounded-md hover:text-primary-300 transition-colors" %>
+            <%= form.submit "Save Changes", 
+                class: "px-4 py-2 font-medium bg-primary-700 hover:bg-primary-600 hover:text-primary-200 rounded-md transition-colors cursor-pointer" %>
+        </div>
+    <% end %>
+</div>

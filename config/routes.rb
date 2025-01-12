@@ -1,10 +1,16 @@
 Rails.application.routes.draw do
   # resource :session
-  resources :passwords
   # resources param: :token
 
+  resources :passwords
+
+  # User Profiles
+  scope "user/:user_id" do
+    resource :profile, only: [ :show, :edit, :update ]
+  end
+
   # Sessions
-  get "login", to: "sessions#new"
+  get "login", to: "sessions#new", as: "new_session"
   post "login", to: "sessions#create"
 
   # Registrations
@@ -14,10 +20,12 @@ Rails.application.routes.draw do
   # Logout
   delete "logout", to: "sessions#destroy"
 
+  # Redirects
+  get "sessions/new", to: redirect("/login")
+
+  # Home
   root "home#index"
 
-  # Redirects
-  get "session/new", to: redirect("/login")
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
