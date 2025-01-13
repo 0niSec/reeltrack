@@ -1,14 +1,20 @@
-<header class="border-b border-primary-800 backdrop-blur bg-primary-900/50">
-    <div class="container max-w-7xl px-4 sm:px-6 lg:px-8">
+<header class="border-b border-primary-600 shadow-md bg-primary-950">
+    <div class="container max-w-6xl">
         <div class="flex items-center justify-between h-16">
             <%# Logo/Brand %>
             <div class="flex-shrink-0">
                 <h1 class="text-neutral-200 font-bold text-xl"><%= link_to "Reeltrack", root_path, class: "hover:text-primary-500 transition-colors" %></h1>
             </div>
 
+            <%# Search %>
+            <%= form_with url: movies_path, method: :get, class: "flex items-center space-x-2" do |form| %>
+                <%= form.text_field :search, placeholder: "Search", class: "border border-neutral-700 rounded-md p-1 text-neutral-200 bg-neutral-800" %>
+                <%= form.submit "Search", class: "bg-neutral-700 text-neutral-200 p-1 rounded-md" %>
+            <% end %>
+
             <%# Navigation %>
             <nav class="flex items-center space-x-4">
-                <%= link_to "Movies", "#", class: "font-bold hover:text-primary-500 transition-colors" %>
+                <%= link_to "Movies", movies_path, class: "font-bold hover:text-primary-500 transition-colors" %>
                 <%= link_to "Shows", "#", class: "font-bold hover:text-primary-500 transition-colors" %>
                 <%= link_to "Lists", "#", class: "font-bold hover:text-primary-500 transition-colors" %>
 
