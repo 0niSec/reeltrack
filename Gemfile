@@ -66,3 +66,5 @@ end
 
 gem "htmlbeautifier"
 gem "active_storage_validations"
+gem "dotenv-rails"
+gem "http"
