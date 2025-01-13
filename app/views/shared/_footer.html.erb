@@ -12,8 +12,11 @@
                 <h3 class="text-lg font-bold mb-4">Quick Links</h3>
                 <ul class="space-y-2">
                     <li><%= link_to "Home", root_path, class: "text-neutral-400 hover:text-primary-500 transition-colors" %></li>
-                    <li><%= link_to "Movies", "#", class: "text-neutral-400 hover:text-primary-500 transition-colors" %></li>
+                    <li><%= link_to "Movies", movies_path, class: "text-neutral-400 hover:text-primary-500 transition-colors" %></li>
                     <li><%= link_to "TV Shows", "#", class: "text-neutral-400 hover:text-primary-500 transition-colors" %></li>
+                    <li>
+                        <%= link_to "Lists", "#", class: "text-neutral-400 hover:text-primary-500 transition-colors" %>
+                    </li>
                 </ul>
             </div>
 
