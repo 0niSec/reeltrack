@@ -1,0 +1,10 @@
+<div class="movie-card text-center w-full rounded-lg relative group hover:shadow-md hover:shadow-primary-500/50 transition-all duration-300 cursor-pointer">
+    <% if movie.poster_url %>
+        <%= image_tag movie.poster_url, class: "w-full rounded-lg border-2 border-transparent group-hover:border-primary-500 transition-colors duration-300" %>
+
+        <%# Overlay %>
+        <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg flex items-center justify-center">
+            <%= render "movies/watched_appears_liked_grid" %>
+        </div>
+    <% end %>
+</div>

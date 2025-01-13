@@ -1,4 +1,68 @@
-<div>
-  <h1 class="font-bold text-4xl">Movies#index</h1>
-  <p>Find me in app/views/movies/index.html.erb</p>
+<% current_year = Date.today.year %>
+<% current_decade = current_year / 10 * 10 %>
+
+<%# Filters %>
+<div class="container max-w-6xl my-10 flex flex-row items-center space-x-2">
+    <span class="text-primary-500 text-sm font-medium">Browse By</span>
+
+    <%# Year %>
+    <%= render partial: "movies/dropdown", locals: {
+        button_text: "Year",
+        menu_items: [
+            { text: "All", path: movies_path(filter: "all") },
+            { text: "Upcoming", path: movies_path(filter: "upcoming") },
+            *current_decade.step(1920, -10).map { |year| 
+                { text: "#{year}s", path: movies_path(decade: year) }
+            }
+        ]
+    } %>
+
+    <%# Rating %>
+    <%= render partial: "movies/dropdown", locals: {
+        button_text: "Rating",
+        menu_items: [
+            { text: "All", path: movies_path(filter: "all") },
+            { text: "Highest first", path: movies_path(rating: "highest") },
+            { text: "Lowest first", path: movies_path(rating: "lowest") },
+        ]
+    } %>
+
+    <%# Genre %>
+    <%= render partial: "movies/dropdown", locals: {
+        button_text: "Genre",
+        menu_items: [
+            { text: "All", path: movies_path(filter: "all") },
+            { text: "Action", path: movies_path(genre: "action") },
+            { text: "Adventure", path: movies_path(genre: "adventure") },
+        ]
+    } %>
+
+    <%# Popular %>
+    <%= render partial: "movies/dropdown", locals: {
+        button_text: "Popular",
+        menu_items: [
+            { text: "All time", path: movies_path(filter: "popular", period: "all") },
+            { text: "This week", path: movies_path(filter: "popular", period: "week") },
+            { text: "This month", path: movies_path(filter: "popular", period: "month") },
+            { text: "This year", path: movies_path(filter: "popular", period: "year") },
+        ]
+    } %>
+</div>
+
+<div class="container max-w-6xl">
+    <%# Popular %>
+    <div class="border-b border-primary-600 mb-2">
+        <div id="popular" class="mb-1">
+            <%= link_to "What's Popular on Reeltrack".upcase, "#", class: "text-primary-500 text-sm hover:text-primary-400 transition-colors" %>
+        </div>
+    </div>
+
+    <%# Movies %>
+    <div class="movies-grid grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-x-4 gap-y-12">
+        <% @movies.each do |movie| %>
+            <%= link_to movie_path(movie), class: "hover:opacity-75 transition-opacity" do %>
+                <%= render "movies/movie_card", movie: movie %>
+            <% end %>
+        <% end %>
+    </div>
 </div>

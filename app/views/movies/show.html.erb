@@ -1,4 +1,105 @@
-<div>
-  <h1 class="font-bold text-4xl">Movies#show</h1>
-  <p>Find me in app/views/movies/show.html.erb</p>
+<%# Backdrop with gradient overlay %>
+<div class="relative h-[400px] w-full">
+    <div class="absolute inset-0 bg-gradient-to-t from-neutral-900 to-transparent"></div>
+    <%= image_tag @movie.backdrop_url, class: "w-full h-full object-cover", cache: true %>
+</div>
+
+<%# Main content %>
+<div class="container max-w-6xl mx-auto -mt-32 relative z-10">
+    <div class="flex gap-8">
+        <%# Left column - Poster and actions %>
+        <div class="w-[300px] flex-shrink-0">
+            <%= image_tag @movie.poster_url, class: "w-full rounded-lg shadow-lg" %>
+
+            <%# Action buttons %>
+            <div class="mt-4 space-y-2">
+                <button class="w-full bg-primary-500 text-white py-2 rounded-md hover:bg-primary-600 transition-colors">
+                    Add to Watchlist
+                </button>
+                <div class="flex gap-2">
+                    <button class="flex-1 bg-neutral-800 text-primary-500 py-2 rounded-md hover:bg-neutral-700 transition-colors">
+                        Like
+                    </button>
+                    <button class="flex-1 bg-neutral-800 text-primary-500 py-2 rounded-md hover:bg-neutral-700 transition-colors">
+                        Rate
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <%# Right column - Movie details %>
+        <div class="flex-grow text-primary-500">
+            <%# Title and tagline %>
+            <h1 class="text-4xl font-bold"><%= @movie.title %></h1>
+            <p class="text-xl italic mt-2 text-primary-400"><%= @movie.tagline %></p>
+
+            <%# Meta information %>
+            <div class="flex items-center gap-4 mt-4 text-sm">
+                <span><%= @movie.release_date.year %></span>
+                <span><%= @movie.runtime %> min</span>
+                <!--<span><%= @movie.rating %></span>-->
+            </div>
+
+            <%# Genres %>
+            <div class="flex gap-2 mt-4">
+                <% @movie.genres.each do |genre| %>
+                    <%= link_to genre, movies_path(genre: genre.downcase), 
+              class: "px-3 py-1 rounded-full border border-primary-500 text-sm hover:bg-primary-500 hover:text-white transition-colors" %>
+                <% end %>
+            </div>
+
+            <%# Rating stats %>
+            <%# It's OK to show the rating and likes info from TMDB for now but we should use our own database for this in the future %>
+            <!-- TODO: Add our own database for this -->
+            <div class="mt-8 flex items-center gap-8">
+                <div>
+                    <div class="text-3xl font-bold"><%= @movie.average_rating %></div>
+                    <div class="text-sm text-primary-400">Average rating</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold"><%= @movie.ratings_count %></div>
+                    <div class="text-sm text-primary-400">Ratings</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold"><%= @movie.likes_count %></div>
+                    <div class="text-sm text-primary-400">Likes</div>
+                </div>
+            </div>
+
+            <%# Overview %>
+            <div class="mt-8">
+                <h2 class="text-xl font-semibold mb-2">Overview</h2>
+                <p class="text-primary-400 leading-relaxed"><%= @movie.overview %></p>
+            </div>
+
+            <%# Cast %>
+            <div class="mt-8">
+                <h2 class="text-xl font-semibold mb-4">Cast</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <% @movie.cast.take(6).each do |member| %>
+                        <div class="flex items-center gap-3">
+                            <%= image_tag member.profile_image_url, class: "w-12 h-12 rounded-full object-cover", cache: true %>
+                            <div>
+                                <div class="font-medium"><%= member.name %></div>
+                                <div class="text-sm text-primary-400"><%= member.character %></div>
+                            </div>
+                        </div>
+                    <% end %>
+                </div>
+            </div>
+
+            <%# Crew %>
+            <div class="mt-8">
+                <h2 class="text-xl font-semibold mb-4">Crew</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <% @movie.crew.take(4).each do |member| %>
+                        <div>
+                            <div class="font-medium"><%= member.name %></div>
+                            <div class="text-sm text-primary-400"><%= member.job %></div>
+                        </div>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

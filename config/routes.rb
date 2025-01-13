@@ -1,10 +1,13 @@
 Rails.application.routes.draw do
-  get "movies/index"
-  get "movies/show"
+  # get "movies", to: "movies#index"
+  # get "movies/:id", to: "movies#show"
+
+
   # resource :session
   # resources param: :token
 
   resources :passwords
+  resources :movies, only: [ :index, :show ]
 
   # User Profiles
   scope "user/:user_id" do
