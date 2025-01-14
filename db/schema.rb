@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_14_135542) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_14_175342) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -50,6 +50,29 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_14_135542) do
     t.integer "genre_id", null: false
   end
 
+  create_table "movie_cast_members", force: :cascade do |t|
+    t.integer "movie_id", null: false
+    t.integer "person_id", null: false
+    t.string "character_name"
+    t.integer "order"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["movie_id", "order"], name: "index_movie_cast_members_on_movie_id_and_order"
+    t.index ["movie_id"], name: "index_movie_cast_members_on_movie_id"
+    t.index ["person_id"], name: "index_movie_cast_members_on_person_id"
+  end
+
+  create_table "movie_crew_members", force: :cascade do |t|
+    t.integer "movie_id", null: false
+    t.integer "person_id", null: false
+    t.string "job"
+    t.string "department"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["movie_id"], name: "index_movie_crew_members_on_movie_id"
+    t.index ["person_id"], name: "index_movie_crew_members_on_person_id"
+  end
+
   create_table "movie_reviews", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "movie_id", null: false
@@ -68,11 +91,28 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_14_135542) do
     t.text "overview"
     t.string "poster_url"
     t.integer "runtime"
-    t.string "tmdb_id"
+    t.string "tmdb_id", null: false
     t.decimal "tmdb_rating"
     t.integer "tmdb_votes_count"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "backdrop_url"
+    t.integer "reviews_count", default: 0
+    t.integer "ratings_count", default: 0
+    t.decimal "average_rating", precision: 2, scale: 1, default: "0.0"
+    t.integer "watchlist_count", default: 0
+    t.index ["average_rating"], name: "index_movies_on_average_rating"
+    t.index ["release_year"], name: "index_movies_on_release_year"
+    t.index ["tmdb_id"], name: "index_movies_on_tmdb_id", unique: true
+  end
+
+  create_table "people", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "tmdb_id", null: false
+    t.string "profile_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tmdb_id"], name: "index_people_on_tmdb_id", unique: true
   end
 
   create_table "profiles", force: :cascade do |t|
@@ -136,6 +176,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_14_135542) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "movie_cast_members", "movies"
+  add_foreign_key "movie_cast_members", "people"
+  add_foreign_key "movie_crew_members", "movies"
+  add_foreign_key "movie_crew_members", "people"
   add_foreign_key "movie_reviews", "movies"
   add_foreign_key "movie_reviews", "users"
   add_foreign_key "movie_reviews", "watched_movies"
