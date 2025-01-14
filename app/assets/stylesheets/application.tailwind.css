@@ -18,7 +18,7 @@
 
 @layer base {
   html {
-    @apply text-primary-50 bg-neutral-900;
+    @apply text-primary-50 bg-neutral-900 caret-primary-500;
   }
 
   h1 {

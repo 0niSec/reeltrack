@@ -23,13 +23,7 @@
 
                     <%# Profile with Avatar %>
                     <%= link_to profile_path(user_id: Current.user.id), class: "flex items-center space-x-2 hover:text-primary-500 transition-colors" do %>
-                        <% if Current.user.avatar.present? %>
-                            <%= image_tag Current.user.avatar, class: "w-8 h-8 rounded-full" %>
-                        <% else %>
-                            <div class="w-8 h-8 rounded-full bg-primary-700 flex items-center justify-center">
-                                <span class="text-sm font-bold"><%= Current.user.username&.first(2)&.upcase || "RT" %></span>
-                            </div>
-                        <% end %>
+                        <%= image_tag Current.user.profile.avatar_url(size: 32), class: "w-8 h-8 rounded-full" %>
                         <span class="font-bold"><%= Current.user.username %></span>
                     <% end %>
                 <% else %>

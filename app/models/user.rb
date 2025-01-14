@@ -6,11 +6,9 @@ class User < ApplicationRecord
   has_many :watched_movies
   has_many :reviews
 
+  # TODO: Add ratings
+
   has_one :profile, dependent: :destroy
-  has_one_attached :avatar do |attachable|
-    attachable.variant :thumb, resize_to_limit: [ 128, 128 ]
-    attachable.variant :medium, resize_to_limit: [ 300, 300 ]
-  end
 
   has_many :movies, through: :watchlist_items, source: :watchable, source_type: "Movie"
   has_many :shows, through: :watchlist_items, source: :watchable, source_type: "Show"
@@ -22,17 +20,20 @@ class User < ApplicationRecord
 
   validates :username,
     presence: true,
-    uniqueness: { case_sensitive: false },
+    uniqueness: { case_sensitive: false, message: "is already in use" },
     format: {
       with: /\A[a-zA-Z0-9]+\z/,
       message: "can only contain letters, numbers, and underscores"
     },
     length: { in: 3..20, message: "must be between 3 and 20 characters" }
 
-    validates :avatar,
-      attached: true,
-      content_type: { with: [ :jpg, :jpeg, :png ], spoofing_protection: true },
-      size: { less_than: 5.megabytes, message: "must be less than 5MB" },
-      dimension: { width: { max: 800 }, height: { max: 800 }, message: "must be less than 800x800" }
+  validates :email_address,
+    presence: true,
+    uniqueness: { case_sensitive: false, message: "is already in use" },
+    format: { with: URI::MailTo::EMAIL_REGEXP, message: "is not a valid email address" }
+
+  def create_profile
+    build_profile.save unless profile
+  end
 
 end
