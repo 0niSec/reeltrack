@@ -1,15 +1,15 @@
 <%# Backdrop with gradient overlay %>
-<div class="relative h-[400px] w-full">
+<div class="relative aspect-[2.76/1] w-full">
     <div class="absolute inset-0 bg-gradient-to-t from-neutral-900 to-transparent"></div>
-    <%= image_tag @movie.backdrop_url, class: "w-full h-full object-cover", cache: true %>
+    <%= image_tag @movie.backdrop_url, class: "w-full h-full object-cover object-center", alt: @movie.title, cache: true %>
 </div>
 
 <%# Main content %>
-<div class="container max-w-6xl mx-auto -mt-32 relative z-10">
+<div class="container max-w-6xl mx-auto -mt-64 relative z-10">
     <div class="flex gap-8">
         <%# Left column - Poster and actions %>
         <div class="w-[300px] flex-shrink-0">
-            <%= image_tag @movie.poster_url, class: "w-full rounded-lg shadow-lg" %>
+            <%= image_tag @movie.poster_url, class: "w-full rounded-lg shadow-lg", alt: @movie.title, cache: true %>
 
             <%# Action buttons %>
             <div class="mt-4 space-y-2">
@@ -34,34 +34,31 @@
             <p class="text-xl italic mt-2 text-primary-400"><%= @movie.tagline %></p>
 
             <%# Meta information %>
-            <div class="flex items-center gap-4 mt-4 text-sm">
+            <div class="flex items-center gap-4 mt-4">
                 <span><%= @movie.release_date.year %></span>
                 <span><%= @movie.runtime %> min</span>
-                <!--<span><%= @movie.rating %></span>-->
             </div>
 
             <%# Genres %>
             <div class="flex gap-2 mt-4">
                 <% @movie.genres.each do |genre| %>
-                    <%= link_to genre, movies_path(genre: genre.downcase), 
+                    <%= link_to genre.name, movies_path(genre: genre.to_param), 
               class: "px-3 py-1 rounded-full border border-primary-500 text-sm hover:bg-primary-500 hover:text-white transition-colors" %>
                 <% end %>
             </div>
 
             <%# Rating stats %>
-            <%# It's OK to show the rating and likes info from TMDB for now but we should use our own database for this in the future %>
-            <!-- TODO: Add our own database for this -->
             <div class="mt-8 flex items-center gap-8">
                 <div>
-                    <div class="text-3xl font-bold"><%= @movie.average_rating %></div>
+                    <div class="text-3xl font-bold"><%= @movie.average_rating > 0 ? @movie.average_rating : "-" %></div>
                     <div class="text-sm text-primary-400">Average rating</div>
                 </div>
                 <div>
-                    <div class="text-3xl font-bold"><%= @movie.ratings_count %></div>
+                    <div class="text-3xl font-bold"><%= @movie.ratings_count > 0 ? @movie.ratings_count : "-" %></div>
                     <div class="text-sm text-primary-400">Ratings</div>
                 </div>
                 <div>
-                    <div class="text-3xl font-bold"><%= @movie.likes_count %></div>
+                    <div class="text-3xl font-bold"><%= @movie.likes_count > 0 ? @movie.likes_count : "-" %></div>
                     <div class="text-sm text-primary-400">Likes</div>
                 </div>
             </div>
@@ -76,12 +73,12 @@
             <div class="mt-8">
                 <h2 class="text-xl font-semibold mb-4">Cast</h2>
                 <div class="grid grid-cols-2 gap-4">
-                    <% @movie.cast.take(6).each do |member| %>
+                    <% @movie.movie_cast_members.order(:order).limit(6).each do |cast_member| %>
                         <div class="flex items-center gap-3">
-                            <%= image_tag member.profile_image_url, class: "w-12 h-12 rounded-full object-cover", cache: true %>
+                            <%= image_tag cast_member.person.profile_url, class: "w-12 h-12 rounded-full object-cover", cache: true %>
                             <div>
-                                <div class="font-medium"><%= member.name %></div>
-                                <div class="text-sm text-primary-400"><%= member.character %></div>
+                                <div class="font-medium"><%= cast_member.person.name %></div>
+                                <div class="text-sm text-primary-400"><%= cast_member.character_name %></div>
                             </div>
                         </div>
                     <% end %>
@@ -91,14 +88,26 @@
             <%# Crew %>
             <div class="mt-8">
                 <h2 class="text-xl font-semibold mb-4">Crew</h2>
-                <div class="grid grid-cols-2 gap-4">
-                    <% @movie.crew.take(4).each do |member| %>
-                        <div>
-                            <div class="font-medium"><%= member.name %></div>
-                            <div class="text-sm text-primary-400"><%= member.job %></div>
+                <div class="grid grid-cols-2 gap-x-8 gap-y-6">
+                    <% @movie.crew_by_department.sort.each do |department, crew_members| %>
+                        <div class="col-span-2">
+                            <h3 class="text-lg font-medium text-primary-400 mb-2"><%= department %></h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <% crew_members.sort_by { |cm| [cm.job, cm.person.name] }.each do |crew_member| %>
+                                    <div>
+                                        <div class="font-medium"><%= crew_member.person.name %></div>
+                                        <div class="text-sm text-primary-400"><%= crew_member.job %></div>
+                                    </div>
+                                <% end %>
+                            </div>
                         </div>
                     <% end %>
                 </div>
+            </div>
+
+            <%# Reviews %>
+            <div class="mt-8">
+                <%= render "shared/reviews", movie: @movie %>
             </div>
         </div>
     </div>
