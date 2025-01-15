@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_14_175342) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_15_055231) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -43,6 +43,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_14_175342) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "tmdb_id"
+    t.index ["tmdb_id"], name: "index_genres_on_tmdb_id", unique: true
   end
 
   create_table "genres_movies", id: false, force: :cascade do |t|
@@ -51,7 +53,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_14_175342) do
   end
 
   create_table "movie_cast_members", force: :cascade do |t|
-    t.integer "movie_id", null: false
+    t.string "movie_id"
     t.integer "person_id", null: false
     t.string "character_name"
     t.integer "order"
@@ -63,7 +65,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_14_175342) do
   end
 
   create_table "movie_crew_members", force: :cascade do |t|
-    t.integer "movie_id", null: false
+    t.string "movie_id"
     t.integer "person_id", null: false
     t.string "job"
     t.string "department"
@@ -75,7 +77,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_14_175342) do
 
   create_table "movie_reviews", force: :cascade do |t|
     t.integer "user_id", null: false
-    t.integer "movie_id", null: false
+    t.string "movie_id"
     t.integer "watched_movie_id", null: false
     t.text "content"
     t.datetime "created_at", null: false
@@ -85,25 +87,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_14_175342) do
     t.index ["watched_movie_id"], name: "index_movie_reviews_on_watched_movie_id"
   end
 
-  create_table "movies", force: :cascade do |t|
+  create_table "movies", primary_key: "tmdb_id", id: :string, force: :cascade do |t|
     t.string "title"
-    t.integer "release_year"
     t.text "overview"
     t.string "poster_url"
     t.integer "runtime"
-    t.string "tmdb_id", null: false
     t.decimal "tmdb_rating"
     t.integer "tmdb_votes_count"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.string "backdrop_url"
     t.integer "reviews_count", default: 0
     t.integer "ratings_count", default: 0
     t.decimal "average_rating", precision: 2, scale: 1, default: "0.0"
     t.integer "watchlist_count", default: 0
-    t.index ["average_rating"], name: "index_movies_on_average_rating"
-    t.index ["release_year"], name: "index_movies_on_release_year"
-    t.index ["tmdb_id"], name: "index_movies_on_tmdb_id", unique: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "tagline"
+    t.date "release_date"
+    t.integer "likes_count", default: 0
   end
 
   create_table "people", force: :cascade do |t|
@@ -146,7 +146,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_14_175342) do
 
   create_table "watched_movies", force: :cascade do |t|
     t.integer "user_id", null: false
-    t.integer "movie_id", null: false
+    t.string "movie_id"
     t.decimal "rating", precision: 2, scale: 1
     t.date "watched_date"
     t.datetime "created_at", null: false
@@ -167,7 +167,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_14_175342) do
 
   create_table "watchlist_movies", force: :cascade do |t|
     t.integer "user_id", null: false
-    t.integer "movie_id", null: false
+    t.string "movie_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["movie_id"], name: "index_watchlist_movies_on_movie_id"
@@ -176,17 +176,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_14_175342) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "movie_cast_members", "movies"
+  add_foreign_key "movie_cast_members", "movies", primary_key: "tmdb_id"
   add_foreign_key "movie_cast_members", "people"
-  add_foreign_key "movie_crew_members", "movies"
+  add_foreign_key "movie_crew_members", "movies", primary_key: "tmdb_id"
   add_foreign_key "movie_crew_members", "people"
-  add_foreign_key "movie_reviews", "movies"
+  add_foreign_key "movie_reviews", "movies", primary_key: "tmdb_id"
   add_foreign_key "movie_reviews", "users"
   add_foreign_key "movie_reviews", "watched_movies"
   add_foreign_key "profiles", "users"
   add_foreign_key "sessions", "users"
-  add_foreign_key "watched_movies", "movies"
+  add_foreign_key "watched_movies", "movies", primary_key: "tmdb_id"
   add_foreign_key "watched_movies", "users"
-  add_foreign_key "watchlist_movies", "movies"
+  add_foreign_key "watchlist_movies", "movies", primary_key: "tmdb_id"
   add_foreign_key "watchlist_movies", "users"
 end
