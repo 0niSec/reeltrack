@@ -7,9 +7,15 @@
             </div>
 
             <%# Search %>
-            <%= form_with url: movies_path, method: :get, class: "flex items-center space-x-2" do |form| %>
-                <%= form.text_field :search, placeholder: "Search", class: "border border-neutral-700 rounded-md p-1 text-neutral-200 bg-neutral-800" %>
-                <%= form.submit "Search", class: "bg-neutral-700 text-neutral-200 p-1 rounded-md" %>
+            <%= form_with url: search_path, method: :get, class: "flex items-center" do |form| %>
+                <div class="relative">
+                    <%= form.text_field :q, placeholder: "Search", class: "border border-neutral-700 rounded-md px-2 py-1 text-neutral-200 bg-neutral-800 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500" %>
+                    <button type="submit" class="absolute inset-y-0 right-0 flex items-center pr-2 bg-transparent border-none cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-neutral-200">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                        </svg>
+                    </button>
+                </div>
             <% end %>
 
             <%# Navigation %>
