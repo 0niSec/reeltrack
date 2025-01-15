@@ -1,0 +1,81 @@
+<div class="container max-w-6xl py-8">
+    <%# Search Header %>
+    <div class="mb-8">
+        <h1 class="text-2xl font-bold mb-2">
+            <% if @query.present? %>
+                Search results for "<%= @query %>"
+            <% else %>
+                Search Movies
+            <% end %>
+        </h1>
+    </div>
+
+    <%# Results Grid %>
+    <% if @movies.any? %>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <% @movies.each do |movie| %>
+                <div class="space-y-2">
+                    <%# Poster %>
+                    <%= link_to movie_path(movie) do %>
+                        <div class="aspect-[2/3] bg-neutral-800 rounded-md overflow-hidden">
+                            <% if movie.poster_url.present? %>
+                                <%= image_tag movie.poster_url, 
+                    class: "w-full h-full object-cover",
+                    alt: movie.title %>
+                            <% end %>
+                        </div>
+                    <% end %>
+
+                    <%# Movie Info %>
+                    <div>
+                        <h2 class="font-medium text-neutral-200">
+                            <%= link_to movie.title, 
+                  movie_path(movie), 
+                  class: "hover:text-primary-500 transition-colors" %>
+                        </h2>
+                        <p class="text-sm text-neutral-400">
+                            <%= movie.release_date.year %>
+                        </p>
+                    </div>
+                </div>
+            <% end %>
+        </div>
+    <% elsif @query.present? %>
+        <div class="py-12">
+            <p class="text-neutral-400 text-center mb-8">No movies found in database matching "<%= @query %>"</p>
+
+            <% if @tmdb_results.present? %>
+                <h2 class="text-xl font-bold mb-4">Results from TMDB:</h2>
+
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <% @tmdb_results.each do |movie| %>
+                        <div class="space-y-2">
+                            <%# Poster %>
+                            <%= link_to tmdb_movie_path(movie["id"]) do %>
+                                <div class="aspect-[2/3] bg-neutral-800 rounded-md overflow-hidden">
+                                    <% if movie["poster_path"].present? %>
+                                        <%= image_tag TmdbService.poster_url(movie["poster_path"]), 
+                                            class: "w-full h-full object-cover",
+                                            alt: movie["title"] %>
+                                    <% end %>
+                                </div>
+                            <% end %>
+
+                            <%# Movie Info %>
+                            <div>
+                                <h2 class="font-medium text-neutral-200">
+                                    <%= link_to movie["title"], 
+                                        tmdb_movie_path(movie["id"]), 
+                                        class: "hover:text-primary-500 transition-colors" %>
+                                </h2>
+                                <p class="text-sm text-neutral-400">
+                                    <%= movie["release_date"]&.first(4) %>
+                                </p>
+                            </div>
+                        </div>
+                    <% end %>
+                </div>
+            <% end %>
+        </div>
+    <% end %>
+</div>

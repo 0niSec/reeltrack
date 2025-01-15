@@ -1,13 +1,11 @@
 Rails.application.routes.draw do
-  # get "movies", to: "movies#index"
-  # get "movies/:id", to: "movies#show"
-
-
   # resource :session
   # resources param: :token
 
   resources :passwords
-  resources :movies, only: [ :index, :show ]
+  resources :movies, only: [ :index, :show ] do
+    resources :reviews, only: [ :create, :destroy ]
+  end
 
   # User Profiles
   scope "user/:user_id" do
@@ -27,6 +25,12 @@ Rails.application.routes.draw do
 
   # Redirects
   get "sessions/new", to: redirect("/login")
+
+  # Search
+  get "search", to: "search#index"
+
+  # TMDB (For importing movies)
+  get "tmdb/:id", to: "tmdb#show", as: :tmdb_movie
 
   # Home
   root "home#index"
