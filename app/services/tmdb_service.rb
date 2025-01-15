@@ -7,6 +7,21 @@ class TmdbService
 
   class << self
 
+    def find_movie(tmdb_id)
+      get("/movie/#{tmdb_id}")
+    end
+
+    def search_movies(query)
+      return [] if query.blank?
+
+      response = get("/search/movie", query: query)
+      response["results"] || []
+    end
+
+    def movie_credits(id)
+      get("/movie/#{id}/credits")
+    end
+
     def popular_movies
       get("/movie/popular")
     end
@@ -19,12 +34,12 @@ class TmdbService
       get("/movie/#{id}/credits")
     end
 
-    def backdrop_url(path)
+    def backdrop_url(path, size: "w1280")
       return nil if path.blank?
-      "#{IMAGE_BASE_URL}/original#{path}"
+      "#{IMAGE_BASE_URL}/#{size}#{path}"
     end
 
-    def poster_url(path)
+    def poster_url(path, size: "w500")
       return nil if path.blank?
       "#{IMAGE_BASE_URL}/w500#{path}"
     end
