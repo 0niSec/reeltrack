@@ -6,8 +6,6 @@ class User < ApplicationRecord
   has_many :watched_movies
   has_many :reviews
 
-  # TODO: Add ratings
-
   has_one :profile, dependent: :destroy
 
   has_many :movies, through: :watchlist_items, source: :watchable, source_type: "Movie"

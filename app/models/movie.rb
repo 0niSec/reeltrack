@@ -47,4 +47,5 @@ class Movie < ApplicationRecord
     movie_crew_members.includes(:person).group_by(&:department)
   end
 
+
 end

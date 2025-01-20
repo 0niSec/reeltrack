@@ -1,40 +1,31 @@
 class ReviewsController < ApplicationController
 
+  before_action :require_authentication
+
   def create
     @movie = Movie.find_by!(tmdb_id: params[:movie_id])
+    @watched_movie = Current.user.watched_movies.find_or_create_by(movie: @movie)
 
-    # Create or update watched movie entry
-    @watched_movie = WatchedMovie.find_or_create_by(
+    @watched_movie.update(watched_movie_params)
+
+    @review = MovieReview.new(
+      movie: @movie,
       user: Current.user,
-      movie: @movie
-    )
-    @watched_movie.update(
-      rating: params[:rating],
-      watched_on: params[:watched_on]
+      watched_movie: @watched_movie,
+      content: params[:content]
     )
 
-    # Create review if content provided
-    if params[:content].present?
-      @review = MovieReview.new(
-        movie: @movie,
-        user: Current.user,
-        watched_movie: @watched_movie,
-        content: params[:content]
-      )
-      @review.save
+    if @review.save
+      redirect_to @movie, notice: "Review posted successfully"
+    else
+      redirect_to @movie, alert: "Error posting review: #{@review.errors.full_messages.join(', ')}"
     end
-
-    render turbo_stream: turbo_stream.replace(
-      "movie_reviews",
-      partial: "shared/reviews",
-      locals: { movie: @movie }
-    )
   end
 
   private
 
-  def review_params
-    params.permit(:content, :rating, :watched_on)
+  def watched_movie_params
+    params.permit(:rating, :liked, :watched_date)
   end
 
 end

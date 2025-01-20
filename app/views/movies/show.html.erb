@@ -12,18 +12,26 @@
             <%= image_tag @movie.poster_url, class: "w-full rounded-lg shadow-lg", alt: @movie.title, cache: true %>
 
             <%# Action buttons %>
-            <div class="mt-4 space-y-2">
+            <div class="mt-4 space-y-2" 
+                 data-controller="modal"
+                 data-modal-debug-value="true">
                 <button class="w-full bg-primary-500 text-white py-2 rounded-md hover:bg-primary-600 transition-colors">
                     Add to Watchlist
                 </button>
-                <div class="flex gap-2">
-                    <button class="flex-1 bg-neutral-800 text-primary-500 py-2 rounded-md hover:bg-neutral-700 transition-colors">
-                        Like
+                <% if authenticated? %>
+                    <button type="button"
+                            data-action="modal#open"
+                            class="w-full bg-neutral-800 text-primary-500 py-2 rounded-md hover:bg-neutral-700 transition-colors">
+                        Review Movie
                     </button>
-                    <button class="flex-1 bg-neutral-800 text-primary-500 py-2 rounded-md hover:bg-neutral-700 transition-colors">
-                        Rate
-                    </button>
-                </div>
+
+                    <%# Modal rendered in the same controller scope %>
+                    <div data-modal-target="container">
+                        <%= render "shared/review_modal", 
+                            movie: @movie, 
+                            watched_movie: Current.user.watched_movies.find_by(movie: @movie) %>
+                    </div>
+                <% end %>
             </div>
         </div>
 
@@ -48,26 +56,38 @@
             </div>
 
             <%# Rating stats %>
-            <div class="mt-8 flex items-center gap-8">
-                <div>
-                    <div class="text-3xl font-bold"><%= @movie.average_rating > 0 ? @movie.average_rating : "-" %></div>
-                    <div class="text-sm text-primary-400">Average rating</div>
-                </div>
-                <div>
-                    <div class="text-3xl font-bold"><%= @movie.ratings_count > 0 ? @movie.ratings_count : "-" %></div>
-                    <div class="text-sm text-primary-400">Ratings</div>
-                </div>
-                <div>
-                    <div class="text-3xl font-bold"><%= @movie.likes_count > 0 ? @movie.likes_count : "-" %></div>
-                    <div class="text-sm text-primary-400">Likes</div>
-                </div>
-            </div>
+            <%= turbo_stream_from @movie, "movie_stats" %>
+            <%= render "movies/movie_stats", movie: @movie %>
 
             <%# Overview %>
             <div class="mt-8">
                 <h2 class="text-xl font-semibold mb-2">Overview</h2>
                 <p class="text-primary-400 leading-relaxed"><%= @movie.overview %></p>
             </div>
+
+            <%# User Actions Row %>
+            <% watched_movie = Current.user&.watched_movies&.find_by(movie: @movie) %>
+            <%= form_with(url: movie_action_watch_path(id: @movie.tmdb_id), method: :post, class: "mb-8") do |form| %>
+                <div class="flex items-center gap-8 mt-6">
+                    <%# Watched Date %>
+                    <div class="relative">
+                        <label class="block text-sm text-primary-400 mb-1">
+                            <%= watched_movie&.watched_date ? "Watched" : "Watched on" %>
+                        </label>
+                        <%= form.date_field :watched_date,
+                            value: watched_movie&.watched_date || Time.current.to_date,
+                            class: "bg-neutral-800 text-primary-400 border border-neutral-700 rounded-md px-3 py-1.5 focus:ring-primary-500 focus:border-primary-500" %>
+                    </div>
+
+                    <%= render "shared/rating_input", 
+                        form: form, 
+                        initial_rating: watched_movie&.rating %>
+
+                    <%= render "shared/like_input", 
+                        form: form, 
+                        initial_liked: watched_movie&.liked %>
+                </div>
+            <% end %>
 
             <%# Cast %>
             <div class="mt-8">
@@ -106,7 +126,8 @@
             </div>
 
             <%# Reviews %>
-            <div class="mt-8">
+            <%= turbo_stream_from @movie, "movie_reviews" %>
+            <div class="mt-8" id="movie_reviews">
                 <%= render "shared/reviews", movie: @movie %>
             </div>
         </div>

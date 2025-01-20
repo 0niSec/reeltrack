@@ -1,0 +1,65 @@
+<div class="hidden fixed inset-0 bg-black bg-opacity-50 z-50"
+     data-action="keydown.escape->modal#close">
+    <div class="fixed inset-0 flex items-center justify-center p-4"
+         data-action="click->modal#closeBackground">
+        <div class="bg-neutral-900 rounded-lg shadow-xl max-w-2xl w-full p-6">
+            <%# Modal Header %>
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-semibold text-primary-500">Review <%= movie.title %></h2>
+                <button type="button"
+                        data-action="modal#close" 
+                        class="text-neutral-400 hover:text-primary-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <%= form_with(url: movie_reviews_path(movie_id: movie.tmdb_id), 
+                        class: "space-y-6") do |form| %>
+
+                <%# Rating and Like Row %>
+                <div class="flex items-center gap-8">
+                    <%# Rating %>
+                    <div class="flex-1">
+                        <%= render "shared/rating_input", 
+                            form: form, 
+                            initial_rating: watched_movie&.rating %>
+                    </div>
+
+                    <%# Like %>
+                    <div class="flex-1">
+                        <%= render "shared/like_input", 
+                            form: form, 
+                            initial_liked: watched_movie&.liked %>
+                    </div>
+                </div>
+
+                <%# Watch Date %>
+                <div>
+                    <label class="block text-sm text-primary-400 mb-1">
+                        <%= watched_movie&.watched_date ? "Watched" : "Watched on" %>
+                    </label>
+                    <%= form.date_field :watched_date,
+                        value: watched_movie&.watched_date || Time.current.to_date,
+                        class: "w-full bg-neutral-800 text-primary-400 border border-neutral-700 rounded-md px-3 py-1.5 focus:ring-primary-500 focus:border-primary-500" %>
+                </div>
+
+                <%# Review Text %>
+                <div>
+                    <label class="block text-sm text-primary-400 mb-1">Your Review</label>
+                    <%= form.text_area :content, 
+                        rows: 4, 
+                        placeholder: "Share your thoughts about the movie...",
+                        class: "w-full bg-neutral-800 text-primary-400 border border-neutral-700 rounded-md px-3 py-2 placeholder:text-neutral-500 focus:ring-primary-500 focus:border-primary-500" %>
+                </div>
+
+                <%# Submit Button %>
+                <div class="flex justify-end">
+                    <%= form.submit "Post Review", 
+                        class: "px-4 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors cursor-pointer" %>
+                </div>
+            <% end %>
+        </div>
+    </div>
+</div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_15_055231) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_16_002023) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -151,6 +151,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_15_055231) do
     t.date "watched_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "liked", default: false
     t.index ["movie_id"], name: "index_watched_movies_on_movie_id"
     t.index ["user_id"], name: "index_watched_movies_on_user_id"
   end

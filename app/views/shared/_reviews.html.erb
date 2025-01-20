@@ -1,22 +1,20 @@
-<%= turbo_frame_tag "movie_reviews" do %>
-    <div class="space-y-4">
-        <h2 class="text-xl font-semibold">Reviews</h2>
+<div class="space-y-4">
+    <h2 class="text-xl font-semibold">Reviews</h2>
 
-        <% if movie.reviews.count > 0 %>
+    <% if movie.reviews.count > 0 %>
+        <div id="movie_reviews">
             <% movie.reviews.order(created_at: :desc).each do |review| %>
                 <%= render "shared/review", review: review %>
             <% end %>
-        <% else %>
-            <p class="text-primary-400">No reviews yet. Be the first to review this movie!</p>
-        <% end %>
+        </div>
+    <% else %>
+        <p class="text-primary-400">No reviews yet. Be the first to review this movie!</p>
+    <% end %>
 
-        <% if authenticated? %>
-            <%= render "shared/review_form", movie: movie %>
-        <% else %>
-            <p class="text-sm text-primary-400">
-                <%= link_to "Sign in", login_path, class: "text-primary-500 hover:underline" %>
-                to leave a review
-            </p>
-        <% end %>
-    </div>
-<% end %>
+    <% if !authenticated? %>
+        <p class="text-sm text-primary-400">
+            <%= link_to "Sign in", login_path, class: "text-primary-500 hover:underline" %>
+            to leave a review
+        </p>
+    <% end %>
+</div>

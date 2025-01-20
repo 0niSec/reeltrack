@@ -7,6 +7,13 @@ Rails.application.routes.draw do
     resources :reviews, only: [ :create, :destroy ]
   end
 
+  scope "/s/" do
+    scope "/movies/:id" do
+      post "watch", to: "movie_actions#watch", as: "movie_action_watch"
+      post "like", to: "movie_actions#like", as: "movie_action_like"
+    end
+  end
+
   # User Profiles
   scope "user/:user_id" do
     resource :profile, only: [ :show, :edit, :update ]
